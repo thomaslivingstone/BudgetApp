@@ -5,6 +5,6 @@ To Run:
 
 1. Clone Repo
 2. From main directory of project
-   i. npm install
-   ii. npx parcel index.html
+   1. npm install
+   2. npx parcel index.html
 4. Go to localhost specified
