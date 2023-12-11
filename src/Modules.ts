@@ -76,7 +76,8 @@ export class TransactionModule extends Module {
         budgetItemSubmitBtn.type = "submit";
         addBudgetItemForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            this.budget.addBudgetItemByParam(budgetItemNameInput.value, "transaction", budgetItemCategoryInput.value, new Date(budgetItemDateInput.value), parseFloat(budgetItemAmountInput.value));
+            // create date with + "T00:00:00" to ensure local time zone 
+            this.budget.addBudgetItemByParam(budgetItemNameInput.value, "transaction", budgetItemCategoryInput.value, new Date(budgetItemDateInput.value + "T00:00:00"), parseFloat(budgetItemAmountInput.value));
             this.#updateBudgetItemEntries();
             this.#updateSummary();
         })
@@ -97,25 +98,10 @@ export class TransactionModule extends Module {
         budgetSummaryDiv.classList.add("budgetSummary");
         budgetSummaryDiv.id = "budgetSummary";
 
-        let budgetSummaryProjectedDiv = document.createElement("div");
-        budgetSummaryProjectedDiv.classList.add("budgetSummaryProjected");
-        budgetSummaryProjectedDiv.innerText = "Projected Spent: $" + this.budget.totalAmountBudgeted;
-
-        let budgetSummarySpentDiv = document.createElement("div");
-        budgetSummarySpentDiv.classList.add("budgetSummarySpent");
-        budgetSummarySpentDiv.innerText = "Actual Spent: $" + this.budget.getSpentSum();
-
-        let budgetSummaryTotalDiv = document.createElement("div");
-        budgetSummaryTotalDiv.classList.add("budgetSummaryTotal");
-        budgetSummaryTotalDiv.innerText = "Difference: " + (this.budget.totalAmountBudgeted - this.budget.getSpentSum());
-
-        budgetSummaryDiv.appendChild(budgetSummaryProjectedDiv);
-        budgetSummaryDiv.appendChild(budgetSummarySpentDiv);
-        budgetSummaryDiv.appendChild(budgetSummaryTotalDiv);
 
         budgetDiv.appendChild(addBudgetItemForm);
-        budgetDiv.appendChild(budgetItemListDiv);
         budgetDiv.appendChild(budgetSummaryDiv);
+        budgetDiv.appendChild(budgetItemListDiv);
 
         if (this.parent !== null) {
             this.parent.appendChild(budgetDiv);
@@ -123,73 +109,141 @@ export class TransactionModule extends Module {
 
         // add items
         this.#updateBudgetItemEntries();
+        this.#updateSummary();
     }
 
     #updateBudgetItemEntries(): void {
         let budgetItemListDiv = document.querySelector("#budgetItemList");
         budgetItemListDiv.innerHTML = "";
+
+        let budgetItemListTable = document.createElement("table");
+        budgetItemListTable.classList.add("budgetItemListTable");
+        budgetItemListTable.id = "budgetItemListTable";
+
+        let tableHeaderDate = document.createElement("th");
+        tableHeaderDate.classList.add("tableHeaderDate");
+        tableHeaderDate.innerText = "Date";
+
+        let tableHeaderTitle = document.createElement("th");
+        tableHeaderTitle.innerText = "Description";
+        tableHeaderTitle.classList.add("tableHeaderTitle");
+
+        let tableHeaderCategory = document.createElement("th");
+        tableHeaderCategory.innerText = "Category";
+        tableHeaderCategory.classList.add("tableHeaderCategory");
+
+        let tableHeaderAmount = document.createElement("th");
+        tableHeaderAmount.innerText = "Amount";
+        tableHeaderAmount.classList.add("tableHeaderAmount");
+
+        let tableHeaderEdit = document.createElement("th");
+        let tableHeaderDelete = document.createElement("th");
+
+        let headerRow = document.createElement("tr");
+        headerRow.classList.add("tableHeader");
+
+        headerRow.appendChild(tableHeaderDate);
+        headerRow.appendChild(tableHeaderTitle);
+        headerRow.appendChild(tableHeaderCategory);
+        headerRow.appendChild(tableHeaderAmount);
+        headerRow.appendChild(tableHeaderEdit);
+        headerRow.appendChild(tableHeaderDelete);
+        budgetItemListTable.appendChild(headerRow);
+        budgetItemListDiv.appendChild(budgetItemListTable);
+
         for (let entry of this.budget.budgetItems.entries()) {
-            this.#addBudgetItemToDocument(entry[0], entry[1], budgetItemListDiv);
+            this.#addBudgetItemToTable(entry[0], entry[1], budgetItemListTable);
         }
     }
 
-    #addBudgetItemToDocument(id: number, budgetItem: BudgetItem, budgetItemListDiv: Element | null): void {
+    #addBudgetItemToTable(id: number, budgetItem: BudgetItem, budgetItemTable: Element | null): void {
 
-        let budgetItemDiv = document.createElement("div");
-        budgetItemDiv.classList.add("budgetItem");
-        budgetItemDiv.id = id.toString();
+        let tableRow = document.createElement("tr");
+        tableRow.classList.add("budgetItem");
+        tableRow.id = id.toString();
 
-        let budgetItemTitleDiv = document.createElement("div");
-        budgetItemTitleDiv.classList.add("budgetItemTitle");
-        budgetItemTitleDiv.innerText = budgetItem.name;
+        let budgetItemDate = document.createElement("td");
+        budgetItemDate.classList.add("budgetItemDate");
+        budgetItemDate.innerText = budgetItem.date.toDateString();
 
-        let budgetItemDateDiv = document.createElement("div");
-        budgetItemDateDiv.classList.add("budgetDateTitle");
-        budgetItemDateDiv.innerText = budgetItem.date.toDateString();
+        let budgetItemTitle = document.createElement("td");
+        budgetItemTitle.classList.add("budgetItemTitle");
+        budgetItemTitle.innerText = budgetItem.name;
 
-        let budgetItemAmountDiv = document.createElement("div");
-        budgetItemAmountDiv.classList.add("budgetItemAmount");
-        budgetItemAmountDiv.innerText = "$" + budgetItem.amount.toString();
 
-        let budgetItemCategoryDiv = document.createElement("div");
-        budgetItemCategoryDiv.classList.add("budgetItemCategory");
-        budgetItemCategoryDiv.innerText = budgetItem.category.name;
 
+        let budgetItemCategory = document.createElement("td");
+        budgetItemCategory.classList.add("budgetItemCategory");
+        budgetItemCategory.innerText = budgetItem.category.name;
+
+        let budgetItemAmount = document.createElement("td");
+        budgetItemAmount.classList.add("budgetItemAmount");
+        budgetItemAmount.innerText = "$" + budgetItem.amount.toString();
+
+        let editBudgetItemBtnTd = document.createElement("td")
         let editBudgetItemBtn = document.createElement("button");
-        editBudgetItemBtn.classList.add("editBudgetItemBtn");
+        editBudgetItemBtn.classList.add("editBudgetItemButton");
         editBudgetItemBtn.innerText = "Edit";
+        editBudgetItemBtnTd.appendChild(editBudgetItemBtn)
 
+        let deleteBudgetItemBtnTd = document.createElement("td")
         let deleteBudgetItemBtn = document.createElement("button");
         deleteBudgetItemBtn.classList.add("deleteBudgetItemButton");
         deleteBudgetItemBtn.innerText = "X";
+        deleteBudgetItemBtnTd.appendChild(deleteBudgetItemBtn);
 
-        budgetItemDiv.appendChild(budgetItemTitleDiv);
-        budgetItemDiv.appendChild(budgetItemDateDiv);
-        budgetItemDiv.appendChild(budgetItemAmountDiv);
-        budgetItemDiv.appendChild(budgetItemCategoryDiv);
-        budgetItemDiv.appendChild(editBudgetItemBtn);
-        budgetItemDiv.appendChild(deleteBudgetItemBtn);
+        tableRow.appendChild(budgetItemDate);
+        tableRow.appendChild(budgetItemTitle);
+        tableRow.appendChild(budgetItemCategory);
+        tableRow.appendChild(budgetItemAmount);
+        tableRow.appendChild(editBudgetItemBtnTd);
+        tableRow.appendChild(deleteBudgetItemBtnTd);
 
-        if (budgetItemListDiv !== null) {
-            budgetItemListDiv.appendChild(budgetItemDiv);
+        if (budgetItemTable !== null) {
+            budgetItemTable.appendChild(tableRow);
         }
-        console.log(budgetItem);
+
+
+        this.#updateSummary();
     }
 
-    #updateSummary() {
+    #updateSummary(): void {
         let budgetSummaryDiv = document.querySelector("#budgetSummary");
 
         let budgetSummaryProjectedDiv = document.createElement("div");
-        budgetSummaryProjectedDiv.classList.add("budgetSummaryProjected");
-        budgetSummaryProjectedDiv.innerText = "Projected Spent: $" + this.budget.totalAmountBudgeted;
+        budgetSummaryProjectedDiv.classList.add("budgetSummaryProjected", "budgetSummaryItem");
+        let budgetSummaryProjectedTitle = document.createElement("div");
+        budgetSummaryProjectedTitle.classList.add("budgetSummaryProjectedTitle");
+        budgetSummaryProjectedTitle.innerText = "Projected";
+        let budgetSummaryProjectedAmount = document.createElement("div");
+        budgetSummaryProjectedAmount.classList.add("budgetSummaryProjectedAmount");
+        budgetSummaryProjectedAmount.innerText = "$" + this.budget.totalAmountBudgeted.toString();
+        budgetSummaryProjectedDiv.appendChild(budgetSummaryProjectedTitle);
+        budgetSummaryProjectedDiv.appendChild(budgetSummaryProjectedAmount);
+
 
         let budgetSummarySpentDiv = document.createElement("div");
-        budgetSummarySpentDiv.classList.add("budgetSummarySpent");
-        budgetSummarySpentDiv.innerText = "Actual Spent: $" + this.budget.getSpentSum();
+        budgetSummarySpentDiv.classList.add("budgetSummarySpent", "budgetSummaryItem");
+        let budgetSummarySpentTitle = document.createElement("div");
+        budgetSummarySpentTitle.classList.add("budgetSummarySpentTitle");
+        budgetSummarySpentTitle.innerText = "Spent";
+        let budgetSummarySpentAmount = document.createElement("div");
+        budgetSummarySpentAmount.classList.add("budgetSummarySpentAmount");
+        budgetSummarySpentAmount.innerText = "$" + this.budget.getSpentSum().toString();
+        budgetSummarySpentDiv.appendChild(budgetSummarySpentTitle);
+        budgetSummarySpentDiv.appendChild(budgetSummarySpentAmount);
 
         let budgetSummaryTotalDiv = document.createElement("div");
-        budgetSummaryTotalDiv.classList.add("budgetSummaryTotal");
-        budgetSummaryTotalDiv.innerText = "Difference: " + (this.budget.totalAmountBudgeted - this.budget.getSpentSum());
+        budgetSummaryTotalDiv.classList.add("budgetSummaryTotal", "budgetSummaryItem");
+        let budgetSummaryTotalTitle = document.createElement("div");
+        budgetSummaryTotalTitle.classList.add("budgetSummaryTotalTitle");
+        budgetSummaryTotalTitle.innerText = "Total";
+        let budgetSummaryTotalAmount = document.createElement("div");
+        budgetSummaryTotalAmount.classList.add("budgetSummaryTotalAmount");
+        budgetSummaryTotalAmount.innerText = "$" + (this.budget.totalAmountBudgeted - this.budget.getSpentSum()).toString();
+        budgetSummaryTotalDiv.appendChild(budgetSummaryTotalTitle);
+        budgetSummaryTotalDiv.appendChild(budgetSummaryTotalAmount);
+
 
         if (budgetSummaryDiv !== null) {
             budgetSummaryDiv.innerHTML = "";
