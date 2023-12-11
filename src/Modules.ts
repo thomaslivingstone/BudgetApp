@@ -45,20 +45,23 @@ export class TransactionModule extends Module {
         addBudgetItemForm.classList.add("addBudgetItemForm");
         addBudgetItemForm.id = "addBudgetItemForm";
 
-        let budgetItemNameInput = document.createElement("input");
-        budgetItemNameInput.type = "text";
-        budgetItemNameInput.name = "name";
-        budgetItemNameInput.id = "budgetItemNameInput";
-
+        let budgetItemDateDiv = document.createElement("div");
+        budgetItemDateDiv.classList.add("addBudgetItemDate");
+        let budgetItemDateLabel = document.createElement("label");
+        budgetItemDateLabel.htmlFor = "date";
+        budgetItemDateLabel.innerText = "Date";
         let budgetItemDateInput = document.createElement("input");
         budgetItemDateInput.type = "date";
         budgetItemDateInput.name = "date";
         budgetItemDateInput.id = "budgetItemDateInput";
+        budgetItemDateDiv.appendChild(budgetItemDateLabel);
+        budgetItemDateDiv.appendChild(budgetItemDateInput);
 
-        let budgetItemAmountInput = document.createElement("input");
-        budgetItemAmountInput.type = "number";
-        budgetItemAmountInput.name = "amount";
-        budgetItemAmountInput.id = "budgetItemAmountInput";
+
+        let budgetItemNameInput = document.createElement("input");
+        budgetItemNameInput.type = "text";
+        budgetItemNameInput.name = "name";
+        budgetItemNameInput.id = "budgetItemNameInput";
 
         let budgetItemCategoryInput = document.createElement("select");
         budgetItemCategoryInput.name = "category";
@@ -71,8 +74,13 @@ export class TransactionModule extends Module {
             budgetItemCategoryInput.appendChild(option);
         }
 
+        let budgetItemAmountInput = document.createElement("input");
+        budgetItemAmountInput.type = "number";
+        budgetItemAmountInput.name = "amount";
+        budgetItemAmountInput.id = "budgetItemAmountInput";
+
         let budgetItemSubmitBtn = document.createElement("button");
-        budgetItemSubmitBtn.innerText = "+";
+        budgetItemSubmitBtn.innerText = "Add Transaction";
         budgetItemSubmitBtn.type = "submit";
         addBudgetItemForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -82,10 +90,10 @@ export class TransactionModule extends Module {
             this.#updateSummary();
         })
 
+        addBudgetItemForm.appendChild(budgetItemDateDiv);
         addBudgetItemForm.appendChild(budgetItemNameInput);
-        addBudgetItemForm.appendChild(budgetItemDateInput);
-        addBudgetItemForm.appendChild(budgetItemAmountInput);
         addBudgetItemForm.appendChild(budgetItemCategoryInput);
+        addBudgetItemForm.appendChild(budgetItemAmountInput);
         addBudgetItemForm.appendChild(budgetItemSubmitBtn);
 
         // items list

@@ -61,6 +61,23 @@ ul li {
 
 /* Transaction Module */
 
+/* Add Transaction Form */
+
+.addBudgetItemForm {
+    width: 55%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.addBudgetItemDate {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+/* Budget List */
+
 .budgetItemList {
     height: 100%;
     width: 100%;
