@@ -188,6 +188,13 @@ ul li {
     justify-content: center;
 }
 
+.copyright {
+    text-align: center;
+    bottom: 0;
+    margin: 1.5em 0;
+    width: 100%;
+}
+
 .budgetSummaryItem {
     padding: 0 1em;
     font-size: 1.5rem;
