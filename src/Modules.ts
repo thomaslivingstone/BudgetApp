@@ -2,13 +2,14 @@
 import { Budget, BudgetItem, BudgetCategory } from "./Budget"
 
 
-interface IModule {
+export interface IModule {
 
     name: string;
     parent: HTMLElement | null;
     budget: Budget;
 
     displayModule(): void;
+    clearModule(): void;
 
 }
 
@@ -25,6 +26,10 @@ class Module implements IModule {
 
     displayModule(): void {
         // must override 
+    }
+
+    clearModule(): void {
+        this.parent.innerHTML = "";
     }
 
 }
