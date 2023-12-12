@@ -45,24 +45,42 @@ export class TransactionModule extends Module {
         addBudgetItemForm.classList.add("addBudgetItemForm");
         addBudgetItemForm.id = "addBudgetItemForm";
 
-        let budgetItemNameInput = document.createElement("input");
-        budgetItemNameInput.type = "text";
-        budgetItemNameInput.name = "name";
-        budgetItemNameInput.id = "budgetItemNameInput";
-
+        let budgetItemDateDiv = document.createElement("div");
+        budgetItemDateDiv.classList.add("addBudgetItemFormSection");
+        let budgetItemDateLabel = document.createElement("label");
+        budgetItemDateLabel.htmlFor = "date";
+        budgetItemDateLabel.innerText = "Date";
         let budgetItemDateInput = document.createElement("input");
         budgetItemDateInput.type = "date";
         budgetItemDateInput.name = "date";
         budgetItemDateInput.id = "budgetItemDateInput";
+        budgetItemDateInput.required = true;
+        budgetItemDateDiv.appendChild(budgetItemDateLabel);
+        budgetItemDateDiv.appendChild(budgetItemDateInput);
 
-        let budgetItemAmountInput = document.createElement("input");
-        budgetItemAmountInput.type = "number";
-        budgetItemAmountInput.name = "amount";
-        budgetItemAmountInput.id = "budgetItemAmountInput";
+        let budgetItemDescriptionDiv = document.createElement("div");
+        budgetItemDescriptionDiv.classList.add("addBudgetItemFormSection")
+        let budgetItemDescriptionLabel = document.createElement("label");
+        budgetItemDescriptionLabel.htmlFor = "description";
+        budgetItemDescriptionLabel.innerText = "Description"
+        let budgetItemDescriptionInput = document.createElement("input");
+        budgetItemDescriptionInput.type = "text";
+        budgetItemDescriptionInput.name = "description";
+        budgetItemDescriptionInput.id = "budgetItemDescriptionInput";
+        budgetItemDescriptionInput.required = true;
+        budgetItemDescriptionDiv.appendChild(budgetItemDescriptionLabel);
+        budgetItemDescriptionDiv.appendChild(budgetItemDescriptionInput);
 
+
+        let budgetItemCategoryDiv = document.createElement("div");
+        budgetItemCategoryDiv.classList.add("addBudgetItemFormSection")
+        let budgetItemCategoryLabel = document.createElement("label");
+        budgetItemCategoryLabel.htmlFor = "category";
+        budgetItemCategoryLabel.innerText = "Category"
         let budgetItemCategoryInput = document.createElement("select");
         budgetItemCategoryInput.name = "category";
         budgetItemCategoryInput.id = "budgetItemCategoryInput";
+        budgetItemCategoryInput.required = true;
 
         for (let category of this.budget.categories) {
             let option = document.createElement("option");
@@ -71,22 +89,43 @@ export class TransactionModule extends Module {
             budgetItemCategoryInput.appendChild(option);
         }
 
+        budgetItemCategoryDiv.appendChild(budgetItemCategoryLabel);
+        budgetItemCategoryDiv.appendChild(budgetItemCategoryInput);
+
+
+        let budgetItemAmountDiv = document.createElement("div");
+        budgetItemAmountDiv.classList.add("addBudgetItemFormSection")
+        let budgetItemAmountLabel = document.createElement("label");
+        budgetItemAmountLabel.htmlFor = "amount";
+        budgetItemAmountLabel.innerText = "Amount"
+        let budgetItemAmountInput = document.createElement("input");
+        budgetItemAmountInput.type = "number";
+        budgetItemAmountInput.name = "amount";
+        budgetItemAmountInput.id = "budgetItemAmountInput";
+        budgetItemAmountInput.required = true;
+        budgetItemAmountDiv.appendChild(budgetItemAmountLabel);
+        budgetItemAmountDiv.appendChild(budgetItemAmountInput);
+
+        let budgetItemSubmitBtnDiv = document.createElement("div");
+        budgetItemSubmitBtnDiv.classList.add("addBudgetItemFormSection");
         let budgetItemSubmitBtn = document.createElement("button");
-        budgetItemSubmitBtn.innerText = "+";
+        budgetItemSubmitBtn.innerText = "Add Transaction";
         budgetItemSubmitBtn.type = "submit";
         addBudgetItemForm.addEventListener("submit", (e) => {
             e.preventDefault();
             // create date with + "T00:00:00" to ensure local time zone 
-            this.budget.addBudgetItemByParam(budgetItemNameInput.value, "transaction", budgetItemCategoryInput.value, new Date(budgetItemDateInput.value + "T00:00:00"), parseFloat(budgetItemAmountInput.value));
+            this.budget.addBudgetItemByParam(budgetItemDescriptionInput.value, "transaction", budgetItemCategoryInput.value, new Date(budgetItemDateInput.value + "T00:00:00"), parseFloat(budgetItemAmountInput.value));
             this.#updateBudgetItemEntries();
             this.#updateSummary();
         })
+        budgetItemSubmitBtnDiv.appendChild(budgetItemSubmitBtn);
 
-        addBudgetItemForm.appendChild(budgetItemNameInput);
-        addBudgetItemForm.appendChild(budgetItemDateInput);
-        addBudgetItemForm.appendChild(budgetItemAmountInput);
-        addBudgetItemForm.appendChild(budgetItemCategoryInput);
-        addBudgetItemForm.appendChild(budgetItemSubmitBtn);
+
+        addBudgetItemForm.appendChild(budgetItemDateDiv);
+        addBudgetItemForm.appendChild(budgetItemDescriptionDiv);
+        addBudgetItemForm.appendChild(budgetItemCategoryDiv);
+        addBudgetItemForm.appendChild(budgetItemAmountDiv);
+        addBudgetItemForm.appendChild(budgetItemSubmitBtnDiv);
 
         // items list
         let budgetItemListDiv = document.createElement("div");
