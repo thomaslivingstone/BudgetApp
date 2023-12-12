@@ -70,10 +70,26 @@ ul li {
     justify-content: space-around;
 }
 
-.addBudgetItemDate {
+
+.addBudgetItemFormSection {
     display: flex;
     flex-direction: column;
     align-items: left;
+}
+
+.addBudgetItemFormSection button {
+    margin: 1.25rem auto;
+    padding: .25rem;
+    border: 2px solid var(--budgetTitleBackground);
+    border-radius: 2px;
+}
+
+.addBudgetItemFormSection input {
+    height: 1.5rem;
+}
+
+.addBudgetItemFormSection select {
+    height: 1.75rem;
 }
 
 /* Budget List */
@@ -188,13 +204,6 @@ ul li {
     justify-content: center;
 }
 
-.copyright {
-    text-align: center;
-    bottom: 0;
-    margin: 1.5em 0;
-    width: 100%;
-}
-
 .budgetSummaryItem {
     padding: 0 1em;
     font-size: 1.5rem;
@@ -203,4 +212,11 @@ ul li {
 
 .budgetSummaryItem:last-child {
     border-right: none;
+}
+
+.copyright {
+    text-align: center;
+    bottom: 0;
+    margin: 1.5em 0 1.5em 20%;
+    width: 80%;
 }
