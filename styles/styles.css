@@ -194,6 +194,7 @@ nav ul li:hover {
     border: none;
     color: var(--main);
     background: none;
+    cursor: pointer;
 }
 
 .editBudgetItemButton:hover {
@@ -205,6 +206,7 @@ nav ul li:hover {
     border: none;
     background: none;
     color: red;
+    cursor: pointer;
 }
 
 .deleteBudgetItemButton:hover {

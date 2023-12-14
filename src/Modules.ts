@@ -196,6 +196,10 @@ export class TransactionModule extends Module {
         for (let entry of this.budget.budgetItems.entries()) {
             this.#addBudgetItemToTable(entry[0], entry[1], budgetItemListTable);
         }
+
+        if (this.budget.budgetItems.size === 0) {
+            budgetItemListDiv.innerHTML = "No Transactions Found";
+        }
     }
 
     #addBudgetItemToTable(id: number, budgetItem: BudgetItem, budgetItemTable: Element | null): void {
