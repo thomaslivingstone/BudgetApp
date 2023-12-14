@@ -69,7 +69,6 @@ nav ul li:hover {
 }
 
 .budget {
-    height: 100vh;
     margin-left: 20%;
     display: flex;
     flex-direction: column;
