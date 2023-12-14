@@ -13,7 +13,7 @@ export interface IModule {
 
 }
 
-class Module implements IModule {
+abstract class Module implements IModule {
     name: string;
     parent: HTMLElement | null;
     budget: Budget;
@@ -24,9 +24,7 @@ class Module implements IModule {
         this.budget = budget;
     }
 
-    displayModule(): void {
-        // must override 
-    }
+    abstract displayModule(): void;
 
     clearModule(): void {
         this.parent.innerHTML = "";
